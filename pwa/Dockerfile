@@ -2,7 +2,7 @@
 
 
 # Versions
-FROM node:lts AS node_upstream
+FROM node:lts-slim AS node_upstream
 
 
 # Base stage for dev and build
@@ -10,10 +10,10 @@ FROM node_upstream AS base
 
 WORKDIR /srv/app
 
-RUN npm install -g corepack@latest && \
-    corepack enable && \
-	corepack prepare --activate pnpm@latest && \
-	pnpm config -g set store-dir /.pnpm-store
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
